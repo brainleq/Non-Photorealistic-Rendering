@@ -121,8 +121,30 @@ int main(void)
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
 
-    ShaderSource source = parse_shader("src/shaders/basic.shader");
-    unsigned int shader = create_shader(source.VertexSource, source.FragmentSource);
+    //ShaderSource source = parse_shader("src/shaders/basic.shader");
+    //unsigned int shader = create_shader(source.VertexSource, source.FragmentSource);
+    std::string vs =
+        "#version 330 core"
+        "\n"
+        "layout(location = 0) in vec4 position;"
+        "\n"
+        "void main() {"
+        "\n"
+        "gl_Position = position;"
+        "\n"
+        "}\n";
+    std::string fs =
+        "#version 330 core"
+        "\n"
+        "layout(location = 0) out vec4 color;"
+        "\n"
+        "void main() {"
+        "\n"
+        "color = vec4(1.0, 0.0, 0.0, 1.0);"
+        "\n"
+        "}\n";
+    unsigned int shader = create_shader(vs, fs);
+
     glUseProgram(shader);
 
     /* Loop until the user closes the window */
