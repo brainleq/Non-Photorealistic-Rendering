@@ -8,6 +8,7 @@
 
 #include "glm/glm.hpp"
 #include "glm/gtx/string_cast.hpp"
+#include "SOIL.h"
 
 struct ShaderSource {
     std::string VertexSource;
@@ -103,9 +104,28 @@ int main(void)
         std::cout << "glewInit failed" << std::endl;
     }
 
-    // Testing glm
+    // load desired image into texture shader
     glm::mat4 projection_matrix_ = glm::mat4(1.0);
     std::cout << glm::to_string(projection_matrix_) << std::endl;
+
+    int width, height;
+    unsigned char* image =
+        SOIL_load_image("images/dog.png", &width, &height, 0, SOIL_LOAD_RGB);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB,
+        GL_UNSIGNED_BYTE, image);
+    glGenerateMipmap(GL_TEXTURE_2D);
+    SOIL_free_image_data(image);
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+
+    float vertices[] = {
+        //  Position      Color             Texcoords
+            -0.5f,  0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, // Top-left
+             0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, // Top-right
+             0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, // Bottom-right
+            -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f  // Bottom-left
+    };
+ 
 
     float positions[] = {
         -0.5f, -0.5f,
@@ -121,29 +141,9 @@ int main(void)
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
 
-    //ShaderSource source = parse_shader("src/shaders/basic.shader");
-    //unsigned int shader = create_shader(source.VertexSource, source.FragmentSource);
-    std::string vs =
-        "#version 330 core"
-        "\n"
-        "layout(location = 0) in vec4 position;"
-        "\n"
-        "void main() {"
-        "\n"
-        "gl_Position = position;"
-        "\n"
-        "}\n";
-    std::string fs =
-        "#version 330 core"
-        "\n"
-        "layout(location = 0) out vec4 color;"
-        "\n"
-        "void main() {"
-        "\n"
-        "color = vec4(1.0, 0.0, 0.0, 1.0);"
-        "\n"
-        "}\n";
-    unsigned int shader = create_shader(vs, fs);
+    ShaderSource source = parse_shader("src/shaders/basic.shader");
+    unsigned int shader = create_shader(source.VertexSource, source.FragmentSource);
+
 
     glUseProgram(shader);
 
@@ -153,7 +153,7 @@ int main(void)
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        //glDrawArrays(GL_TRIANGLES, 0, 3);
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
