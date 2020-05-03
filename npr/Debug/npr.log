@@ -1,2 +1,3 @@
 ﻿  main.cpp
-  npr.vcxproj -> D:\Brian\Documents\workspace\cg\final\npr\Debug\npr.exe
+C:\Users\tarun\OneDrive\Documents\God_Files\graphics\Non-Photorealistic-Rendering\npr\src\main.cpp(166,22): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
+  npr.vcxproj -> C:\Users\tarun\OneDrive\Documents\God_Files\graphics\Non-Photorealistic-Rendering\Debug\npr.exe

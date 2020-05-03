@@ -93,7 +93,11 @@ int main(void)
     /* Load image and set width and height */
     int width, height, channels;
     unsigned char* image =
+<<<<<<< HEAD
         SOIL_load_image("images/eagle.jpg", &width, &height, &channels, SOIL_LOAD_L);
+=======
+        SOIL_load_image("images/kennedy.jpg", &width, &height, &channels, SOIL_LOAD_RGB);
+>>>>>>> f0812f22ba9048f7929962680254d19033ef66fb
     std::cout << "width: " << width << ", height: " << height << std::endl;
 
     /* Create a windowed mode window and its OpenGL context */
@@ -111,9 +115,6 @@ int main(void)
         std::cout << "glewInit failed" << std::endl;
     }
 
-    // load desired image into texture shader
-    glm::mat4 projection_matrix_ = glm::mat4(1.0);
-    std::cout << glm::to_string(projection_matrix_) << std::endl;
     // Create Vertex Array Object
     GLuint vao;
     glGenVertexArrays(1, &vao);
@@ -165,6 +166,8 @@ int main(void)
     glVertexAttribPointer(texAttrib, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), (void*)(5 * sizeof(GLfloat)));
 
     glUseProgram(shader);
+    GLint loc = glGetUniformLocation(shader, "height");
+    glUniform1f(loc, height);
     //texture
 
     GLuint tex;
