@@ -90,8 +90,14 @@ int main(void)
     if (!glfwInit())
         return -1;
 
+    /* Load image and set width and height */
+    int width, height, channels;
+    unsigned char* image =
+        SOIL_load_image("images/eagle.jpg", &width, &height, &channels, SOIL_LOAD_RGB);
+    std::cout << "width: " << width << ", height: " << height << std::endl;
+
     /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(1024, 768, "Hello World", NULL, NULL);
+    window = glfwCreateWindow(width, height, "Hello World", NULL, NULL);
     if (!window)
     {
         glfwTerminate();
@@ -119,10 +125,10 @@ int main(void)
 
     GLfloat vertices[] = {
         //  Position      Color             Texcoords
-            -0.5f,  0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, // Top-left
-             0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, // Top-right
-             0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, // Bottom-right
-            -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f  // Bottom-left
+            -1.0f,  1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, // Top-left
+             1.0f,  1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, // Top-right
+             1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, // Bottom-right
+            -1.0f, -1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f  // Bottom-left
     };
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -165,11 +171,6 @@ int main(void)
     glGenTextures(1, &tex);
     glBindTexture(GL_TEXTURE_2D, tex);
     
-    int width, height, channels;
-    unsigned char* image =
-        SOIL_load_image("images/eagle.png", &width, &height, &channels, SOIL_LOAD_RGB);
-
-    std::cout << "width: " << width << ", height: " << height << std::endl;
     if (0 == image)
     {
         printf("SOIL loading error: '%s'\n", SOIL_last_result());
