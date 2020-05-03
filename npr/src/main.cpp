@@ -93,11 +93,7 @@ int main(void)
     /* Load image and set width and height */
     int width, height, channels;
     unsigned char* image =
-<<<<<<< HEAD
-        SOIL_load_image("images/eagle.jpg", &width, &height, &channels, SOIL_LOAD_L);
-=======
-        SOIL_load_image("images/kennedy.jpg", &width, &height, &channels, SOIL_LOAD_RGB);
->>>>>>> f0812f22ba9048f7929962680254d19033ef66fb
+        SOIL_load_image("images/kennedy.jpg", &width, &height, &channels, SOIL_LOAD_L);
     std::cout << "width: " << width << ", height: " << height << std::endl;
 
     /* Create a windowed mode window and its OpenGL context */
