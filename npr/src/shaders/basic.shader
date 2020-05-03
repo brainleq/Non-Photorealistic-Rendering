@@ -40,11 +40,11 @@ void main()
         2.0, 0.0, -2.0,
         1.0, 0.0, -1.0
     );
-    //vec3 diffuse = vec3(texture(tex, Texcoord.xy).rgb);
+    vec3 diffuse = vec3(texture(tex, Texcoord.xy));
     mat3 I;
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
-            vec3 sample = vec3(texelFetch(tex, ivec2(gl_FragCoord) + ivec2(i - 1, j - 1), 0).rgb);
+            vec3 sample = vec3(texelFetch(tex, ivec2(gl_FragCoord) + ivec2(i - 1, j - 1), 0));
             I[i][j] = length(sample);
         }
     }
@@ -53,6 +53,7 @@ void main()
     float gy = dot(sy[0], I[0]) + dot(sy[1], I[1]) + dot(sy[2], I[2]);
 
     float g = sqrt(pow(gx, 2.0) + pow(gy, 2.0));
+    g = smoothstep(0.1, 1.0, g);
     outColor = vec4(vec3(g), 1.0);
     //outColor = vec4(diffuse, 1.0);
 };
