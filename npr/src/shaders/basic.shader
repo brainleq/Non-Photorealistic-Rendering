@@ -22,11 +22,7 @@ void main() {
 in vec2 Texcoord;
 out vec4 outColor;
 uniform sampler2D tex;
-
-//void main() {
-//    outColor = vec4(texture(tex, Texcoord).r);
-//    //outColor = texture(tex, Texcoord) * vec4(Color, 1.0);
-//};
+uniform float height;
 
 void main()
 {
@@ -44,7 +40,7 @@ void main()
     mat3 I;
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
-            vec3 sample = vec3(texelFetch(tex, ivec2(gl_FragCoord) + ivec2(i - 1, j - 1), 0).rgb);
+            vec3 sample = vec3(texelFetch(tex, ivec2(gl_FragCoord.x, height - gl_FragCoord.y) + ivec2(i - 1, j - 1), 0).rgb);
             I[i][j] = length(sample);
         }
     }
