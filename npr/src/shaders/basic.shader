@@ -20,9 +20,11 @@ void main() {
 
 //in vec3 Color;
 in vec2 Texcoord;
+in vec3 Color;
 out vec4 outColor;
 uniform sampler2D tex;
 uniform float height;
+uniform float type;
 
 void main()
 {
@@ -50,6 +52,18 @@ void main()
 
     float g = sqrt(pow(gx, 2.0) + pow(gy, 2.0));
     g = smoothstep(0.1, 1.0, g);
-    outColor = vec4(vec3(g), 1.0);
-    //outColor = vec4(diffuse, 1.0);
+
+    if (type == 0) {
+        outColor = vec4(diffuse, 1.0);
+    }
+    else if (type == 1) {
+        outColor = vec4(vec3(g), 1.0);
+    }
+    else if (type == 2) {
+        outColor = texture(tex, Texcoord) * vec4(Color, 1.0);
+    }
+    // default
+    else {
+        outColor = vec4(diffuse, 1.0);
+    }
 };

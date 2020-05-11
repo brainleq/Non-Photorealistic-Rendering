@@ -10,6 +10,9 @@
 #include "glm/gtx/string_cast.hpp"
 #include "SOIL.h"
 
+int current_key = 0;
+int old_key = 0;
+
 struct ShaderSource {
     std::string VertexSource;
     std::string FragmentSource;
@@ -82,6 +85,34 @@ static unsigned int create_shader(const std::string& vertex_shader, const std::s
     return program;
 }
 
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+    if (key == GLFW_KEY_0 && action == GLFW_PRESS) {
+        old_key = current_key;
+        current_key = 0;
+    }
+    else if (key == GLFW_KEY_1 && action == GLFW_PRESS) {
+        old_key = current_key;
+        current_key = 1;
+    }
+    else if (key == GLFW_KEY_2 && action == GLFW_PRESS) {
+        old_key = current_key;
+        current_key = 2;
+    }
+    else if (key == GLFW_KEY_3 && action == GLFW_PRESS) {
+        old_key = current_key;
+        current_key = 3;
+    }
+    else if (key == GLFW_KEY_4 && action == GLFW_PRESS) {
+        old_key = current_key;
+        current_key = 4;
+    }
+    else if (key == GLFW_KEY_5 && action == GLFW_PRESS) {
+        old_key = current_key;
+        current_key = 5;
+    }
+}
+
 int main(void)
 {
     GLFWwindow* window;
@@ -93,7 +124,7 @@ int main(void)
     /* Load image and set width and height */
     int width, height, channels;
     unsigned char* image =
-        SOIL_load_image("images/kennedy.jpg", &width, &height, &channels, SOIL_LOAD_L);
+        SOIL_load_image("images/eagle.jpg", &width, &height, &channels, SOIL_LOAD_L);
     std::cout << "width: " << width << ", height: " << height << std::endl;
 
     /* Create a windowed mode window and its OpenGL context */
@@ -164,6 +195,9 @@ int main(void)
     glUseProgram(shader);
     GLint loc = glGetUniformLocation(shader, "height");
     glUniform1f(loc, height);
+
+    GLint loc2 = glGetUniformLocation(shader, "type");
+    glUniform1f(loc2, current_key);
     //texture
 
     GLuint tex;
@@ -182,6 +216,7 @@ int main(void)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glfwSetKeyCallback(window, key_callback);
 
 
     /* Loop until the user closes the window */
@@ -189,6 +224,11 @@ int main(void)
     {
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT);
+
+        if (current_key != old_key) {
+            glUniform1f(loc2, current_key);
+            old_key = current_key;
+        }
 
         //glDrawArrays(GL_TRIANGLES, 0, 3);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
