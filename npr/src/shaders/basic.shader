@@ -25,6 +25,7 @@ out vec4 outColor;
 uniform sampler2D tex;
 uniform float height;
 uniform float type;
+uniform float width;
 
 void main()
 {
@@ -38,7 +39,8 @@ void main()
         2.0, 0.0, -2.0,
         1.0, 0.0, -1.0
     );
-    vec3 diffuse = vec3(texture(tex, Texcoord.xy));
+    //vec3 diffuse = vec3(texture(tex, Texcoord.xy));
+    vec3 diffuse = texelFetch(tex, ivec2(gl_FragCoord.x, height - gl_FragCoord.y), 0).xyz;
     mat3 I;
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
@@ -61,6 +63,24 @@ void main()
     }
     else if (type == 2) {
         outColor = texture(tex, Texcoord) * vec4(Color, 1.0);
+    }
+    else if (type == 3) {
+        vec2 ctr = vec2(gl_FragCoord.x / width, ((height - gl_FragCoord.y) / height));
+        vec2 off = vec2((1.0 / width) * 2 / 3, (1.0 / height) * 2 / 3);
+        // Access in direction A
+        vec4 retTex = vec4(diffuse, 1.0) * vec4(ctr.x - off.x, ctr.y + off.y, 1.0, 1.0);
+        vec4 A = texture2D(tex, retTex.xy);
+        // Access in direction C
+        retTex = vec4(diffuse, 1.0) * vec4(ctr.x + off.x, ctr.y + off.y, 1.0, 1.0);
+        vec4 B = texture2D(tex, retTex.xy);
+
+        retTex = vec4(diffuse, 1.0) * vec4(ctr.x + off.x, ctr.y - off.y, 1.0, 1.0);
+        vec4 C = texture2D(tex, retTex.xy);
+        // Access in direction H
+        retTex = vec4(diffuse, 1.0) * vec4(ctr.x + off.x, ctr.y - off.y, 1.0, 1.0);
+        vec4 D = texture2D(tex, retTex.xy);
+        // Output blurred destination image pixels
+        outColor = vec4(0.25 * (A + B + C + D));
     }
     // default
     else {

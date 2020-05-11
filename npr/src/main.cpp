@@ -124,7 +124,7 @@ int main(void)
     /* Load image and set width and height */
     int width, height, channels;
     unsigned char* image =
-        SOIL_load_image("images/eagle.jpg", &width, &height, &channels, SOIL_LOAD_L);
+        SOIL_load_image("images/lion.jpg", &width, &height, &channels, SOIL_LOAD_RGB);
     std::cout << "width: " << width << ", height: " << height << std::endl;
 
     /* Create a windowed mode window and its OpenGL context */
@@ -198,6 +198,9 @@ int main(void)
 
     GLint loc2 = glGetUniformLocation(shader, "type");
     glUniform1f(loc2, current_key);
+
+    GLint loc3 = glGetUniformLocation(shader, "width");
+    glUniform1f(loc3, width);
     //texture
 
     GLuint tex;
@@ -208,7 +211,7 @@ int main(void)
     {
         printf("SOIL loading error: '%s'\n", SOIL_last_result());
     }
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, image);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
     glGenerateMipmap(GL_TEXTURE_2D);
     SOIL_free_image_data(image);
 
