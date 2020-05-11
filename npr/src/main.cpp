@@ -6,8 +6,8 @@
 #include <string>
 #include <fstream>
 
-#include "glm/glm.hpp"
-#include "glm/gtx/string_cast.hpp"
+//#include "glm/glm.hpp"
+//#include "glm/gtx/string_cast.hpp"
 #include "SOIL.h"
 
 int current_key = 0;
@@ -124,7 +124,7 @@ int main(void)
     /* Load image and set width and height */
     int width, height, channels;
     unsigned char* image =
-        SOIL_load_image("images/lion.jpg", &width, &height, &channels, SOIL_LOAD_RGB);
+        SOIL_load_image("images/antelope.jpg", &width, &height, &channels, SOIL_LOAD_RGB);
     std::cout << "width: " << width << ", height: " << height << std::endl;
 
     /* Create a windowed mode window and its OpenGL context */
@@ -201,6 +201,10 @@ int main(void)
 
     GLint loc3 = glGetUniformLocation(shader, "width");
     glUniform1f(loc3, width);
+
+    float daze = 7;
+    GLint loc4 = glGetUniformLocation(shader, "daze");
+    glUniform1f(loc4, daze);
     //texture
 
     GLuint tex;
@@ -221,6 +225,7 @@ int main(void)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glfwSetKeyCallback(window, key_callback);
 
+    bool inc = true;
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
@@ -229,8 +234,28 @@ int main(void)
         glClear(GL_COLOR_BUFFER_BIT);
 
         if (current_key != old_key) {
+            if (current_key == 3) {
+                inc = true;
+                daze = 0;
+                glUniform1f(loc4, daze);
+            }
             glUniform1f(loc2, current_key);
             old_key = current_key;
+        }
+        if (current_key == 3) {
+            if (inc) {
+                ++daze;
+            }
+            else {
+                --daze;
+                if (daze == 0) {
+                    inc = true;
+                }
+            }
+            if (daze >= 12) {
+                inc = false;
+            }
+            glUniform1f(loc4, daze);
         }
 
         //glDrawArrays(GL_TRIANGLES, 0, 3);

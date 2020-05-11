@@ -26,6 +26,7 @@ uniform sampler2D tex;
 uniform float height;
 uniform float type;
 uniform float width;
+uniform float daze;
 
 void main()
 {
@@ -53,31 +54,49 @@ void main()
     float gy = dot(sy[0], I[0]) + dot(sy[1], I[1]) + dot(sy[2], I[2]);
 
     float g = sqrt(pow(gx, 2.0) + pow(gy, 2.0));
-    g = smoothstep(0.1, 1.0, g);
+    g = smoothstep(.7, 1.0, g);
+    vec3 edgeColor = vec3(0, 0, 0);
 
     if (type == 0) {
         outColor = vec4(diffuse, 1.0);
     }
     else if (type == 1) {
-        outColor = vec4(vec3(g), 1.0);
+
+        vec2 ctr = vec2(gl_FragCoord.x / width, ((height - gl_FragCoord.y) / height));
+        vec2 off = vec2((daze / width) * 2 / 3, (2.0 / height) * 2 / 3);
+        // Access in direction A
+        vec4 retTex = vec4(ctr.x - off.x, ctr.y + off.y, 1.0, 1.0);
+        vec4 A = texture2D(tex, retTex.xy);
+        // Access in direction C
+        retTex = vec4(ctr.x + off.x, ctr.y + off.y, 1.0, 1.0);
+        vec4 B = texture2D(tex, retTex.xy);
+
+        retTex = vec4(ctr.x + off.x, ctr.y - off.y, 1.0, 1.0);
+        vec4 C = texture2D(tex, retTex.xy);
+        // Access in direction H
+        retTex = vec4(ctr.x + off.x, ctr.y - off.y, 1.0, 1.0);
+        vec4 D = texture2D(tex, retTex.xy);
+        // Output blurred destination image pixels
+        outColor = vec4(vec3(g), 1.0) * (A + B + C + D);
+
     }
     else if (type == 2) {
         outColor = texture(tex, Texcoord) * vec4(Color, 1.0);
     }
     else if (type == 3) {
         vec2 ctr = vec2(gl_FragCoord.x / width, ((height - gl_FragCoord.y) / height));
-        vec2 off = vec2((1.0 / width) * 2 / 3, (1.0 / height) * 2 / 3);
+        vec2 off = vec2((daze / width) * 2 / 3, (2.0 / height) * 2 / 3);
         // Access in direction A
-        vec4 retTex = vec4(diffuse, 1.0) * vec4(ctr.x - off.x, ctr.y + off.y, 1.0, 1.0);
+        vec4 retTex = vec4(ctr.x - off.x, ctr.y + off.y, 1.0, 1.0);
         vec4 A = texture2D(tex, retTex.xy);
         // Access in direction C
-        retTex = vec4(diffuse, 1.0) * vec4(ctr.x + off.x, ctr.y + off.y, 1.0, 1.0);
+        retTex = vec4(ctr.x + off.x, ctr.y + off.y, 1.0, 1.0);
         vec4 B = texture2D(tex, retTex.xy);
 
-        retTex = vec4(diffuse, 1.0) * vec4(ctr.x + off.x, ctr.y - off.y, 1.0, 1.0);
+        retTex = vec4(ctr.x + off.x, ctr.y - off.y, 1.0, 1.0);
         vec4 C = texture2D(tex, retTex.xy);
         // Access in direction H
-        retTex = vec4(diffuse, 1.0) * vec4(ctr.x + off.x, ctr.y - off.y, 1.0, 1.0);
+        retTex = vec4(ctr.x + off.x, ctr.y - off.y, 1.0, 1.0);
         vec4 D = texture2D(tex, retTex.xy);
         // Output blurred destination image pixels
         outColor = vec4(0.25 * (A + B + C + D));
