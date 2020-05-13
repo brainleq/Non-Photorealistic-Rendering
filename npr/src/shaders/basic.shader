@@ -85,7 +85,7 @@ void main()
     }
     else if (type == 3) {
         vec2 ctr = vec2(gl_FragCoord.x / width, ((height - gl_FragCoord.y) / height));
-        vec2 off = vec2((daze / width) * 2 / 3, (2.0 / height) * 2 / 3);
+        vec2 off = vec2((2.0 / width) * 2 / 3, (2.0 / height) * 2 / 3);
         // Access in direction A
         vec4 retTex = vec4(ctr.x - off.x, ctr.y + off.y, 1.0, 1.0);
         vec4 A = texture2D(tex, retTex.xy);
