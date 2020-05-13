@@ -50,8 +50,19 @@ void main()
         }
     }
 
+    // compute gradient
     float gx = dot(sx[0], I[0]) + dot(sx[1], I[1]) + dot(sx[2], I[2]);
     float gy = dot(sy[0], I[0]) + dot(sy[1], I[1]) + dot(sy[2], I[2]);
+    vec3 flow = normalize(vec3(gy, gx, 0.0));
+
+    // rotate flow
+    float theta = 90.0 / 180.0 * 3.1415926536;
+    float r_gx = flow[0] * cos(theta) - flow[1] * sin(theta);
+    float r_gy = flow[1] * cos(theta) + flow[0] * sin(theta);
+    flow = vec3(r_gy, r_gy, 0.0);
+
+    // compute t_new
+
 
     float g = sqrt(pow(gx, 2.0) + pow(gy, 2.0));
     g = smoothstep(.7, 1.0, g);
@@ -63,7 +74,7 @@ void main()
     else if (type == 1) {
 
         vec2 ctr = vec2(gl_FragCoord.x / width, ((height - gl_FragCoord.y) / height));
-        vec2 off = vec2((daze / width) * 2 / 3, (2.0 / height) * 2 / 3);
+        vec2 off = vec2((2.0 / width) * 2 / 3, (2.0 / height) * 2 / 3);
         // Access in direction A
         vec4 retTex = vec4(ctr.x - off.x, ctr.y + off.y, 1.0, 1.0);
         vec4 A = texture2D(tex, retTex.xy);
@@ -77,7 +88,7 @@ void main()
         retTex = vec4(ctr.x + off.x, ctr.y - off.y, 1.0, 1.0);
         vec4 D = texture2D(tex, retTex.xy);
         // Output blurred destination image pixels
-        outColor = vec4(vec3(g), 1.0) * (A + B + C + D);
+        outColor = vec4(vec3(g), 1.0) /* * (A + B + C + D)*/;
 
     }
     else if (type == 2) {
