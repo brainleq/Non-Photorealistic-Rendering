@@ -6,8 +6,8 @@
 #include <string>
 #include <fstream>
 
-//#include "glm/glm.hpp"
-//#include "glm/gtx/string_cast.hpp"
+#include "glm/glm.hpp"
+#include "glm/gtx/string_cast.hpp"
 #include "SOIL.h"
 
 int current_key = 0;
@@ -124,7 +124,7 @@ int main(void)
     /* Load image and set width and height */
     int width, height, channels;
     unsigned char* image =
-        SOIL_load_image("images/lion.jpg", &width, &height, &channels, SOIL_LOAD_RGB);
+        SOIL_load_image("images/kennedy.jpg", &width, &height, &channels, SOIL_LOAD_RGB);
     std::cout << "width: " << width << ", height: " << height << std::endl;
 
     /* Create a windowed mode window and its OpenGL context */

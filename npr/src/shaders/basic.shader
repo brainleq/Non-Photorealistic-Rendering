@@ -42,34 +42,65 @@ void main()
     );
     //vec3 diffuse = vec3(texture(tex, Texcoord.xy));
     vec3 diffuse = texelFetch(tex, ivec2(gl_FragCoord.x, height - gl_FragCoord.y), 0).xyz;
-    mat3 I;
-    for (int i = 0; i < 3; i++) {
-        for (int j = 0; j < 3; j++) {
-            vec3 sample = vec3(texelFetch(tex, ivec2(gl_FragCoord.x, height - gl_FragCoord.y) + ivec2(i - 1, j - 1), 0).rgb);
-            I[i][j] = length(sample);
+    const int big_kernel = 10;
+    const int kernel = big_kernel / 2;
+    vec3 flow_field[big_kernel * big_kernel];
+    float gradients[big_kernel * big_kernel];
+    int i = 0;
+    for (int r = -kernel; r < kernel; ++r) {
+        for (int c = -kernel; c < kernel; ++c) {
+            mat3 I;
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 3; j++) {
+                    vec3 sample = vec3(texelFetch(tex, ivec2(gl_FragCoord.x, height - gl_FragCoord.y) + ivec2(i + r - 1, j + c - 1), 0).rgb);
+                    I[i][j] = length(sample);
+                }
+            }
+            // compute gradient
+            float gx = dot(sx[0], I[0]) + dot(sx[1], I[1]) + dot(sx[2], I[2]);
+            float gy = dot(sy[0], I[0]) + dot(sy[1], I[1]) + dot(sy[2], I[2]);
+            float g = sqrt(pow(gx, 2.0) + pow(gy, 2.0));
+            vec3 flow = normalize(vec3(gy, gx, 0.0));
+
+            // rotate flow
+            float theta = 90.0 / 180.0 * 3.1415926536;
+            float r_gx = flow[0] * cos(theta) - flow[1] * sin(theta);
+            float r_gy = flow[1] * cos(theta) + flow[0] * sin(theta);
+            flow = vec3(r_gx, r_gy, 0.0);
+
+            flow_field[i] = flow;
+            gradients[i] = g;
+            ++i;
         }
     }
 
-    // compute gradient
-    float gx = dot(sx[0], I[0]) + dot(sx[1], I[1]) + dot(sx[2], I[2]);
-    float gy = dot(sy[0], I[0]) + dot(sy[1], I[1]) + dot(sy[2], I[2]);
-    vec3 flow = normalize(vec3(gy, gx, 0.0));
-
-    // rotate flow
-    float theta = 90.0 / 180.0 * 3.1415926536;
-    float r_gx = flow[0] * cos(theta) - flow[1] * sin(theta);
-    float r_gy = flow[1] * cos(theta) + flow[0] * sin(theta);
-    flow = vec3(r_gy, r_gy, 0.0);
-
     // compute t_new
+    vec3 t_new = vec3(0.0, 0.0, 0.0);
+    vec3 cur_x = flow_field[big_kernel * big_kernel / 2 - 1];
+    for (int r = -kernel; r < kernel; ++r) {
+        for (int c = -kernel; c < kernel; ++c) {
+            vec3 cur_y = flow_field[((r + kernel) * big_kernel) + c + kernel];
+            float phi = dot(cur_x, cur_y) > 0.0 ? 1.0 : -1.0;
+            vec2 a = vec2(gl_FragCoord.x, height - gl_FragCoord.y);
+            vec2 b = vec2(gl_FragCoord.x + c, height - gl_FragCoord.y + r);
+            float w_s = distance(a, b) < kernel ? 1.0 : 1.0;
+            float g1 = gradients[big_kernel * big_kernel / 2 - 1];
+            float g2 = gradients[((r + kernel) * big_kernel) + c + kernel];
+            float w_m = (1 + tanh(g2 - g1)) / 2;
+            float w_d = abs(dot(cur_x, cur_y));
 
+            t_new += phi * cur_y * w_s * w_m * w_d;
+        }
+    }
+    t_new = normalize(t_new);
 
-    float g = sqrt(pow(gx, 2.0) + pow(gy, 2.0));
+    float g = sqrt(pow(flow_field[big_kernel * big_kernel / 2 - 1].x, 2.0) + pow(flow_field[big_kernel * big_kernel / 2 - 1].y, 2.0));
     g = smoothstep(.7, 1.0, g);
     vec3 edgeColor = vec3(0, 0, 0);
 
     if (type == 0) {
-        outColor = vec4(diffuse, 1.0);
+        float m = max(max(t_new.x, t_new.y), t_new.z);
+        outColor = vec4(vec3(m), 1.0);
     }
     else if (type == 1) {
 
@@ -87,8 +118,12 @@ void main()
         // Access in direction H
         retTex = vec4(ctr.x + off.x, ctr.y - off.y, 1.0, 1.0);
         vec4 D = texture2D(tex, retTex.xy);
+
+        float m = max(max(t_new.x, t_new.y), t_new.z);
+        outColor = vec4(vec3(m), 1.0);
+
         // Output blurred destination image pixels
-        outColor = vec4(vec3(g), 1.0) /* * (A + B + C + D)*/;
+        outColor = vec4(vec3(m), 1.0) * (A + B + C + D);
 
     }
     else if (type == 2) {
@@ -117,3 +152,4 @@ void main()
         outColor = vec4(diffuse, 1.0);
     }
 };
+
