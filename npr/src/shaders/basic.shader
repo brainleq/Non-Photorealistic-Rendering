@@ -83,7 +83,7 @@ void main()
             float phi = dot(cur_x, cur_y) > 0.0 ? 1.0 : -1.0;
             vec2 a = vec2(gl_FragCoord.x, height - gl_FragCoord.y);
             vec2 b = vec2(gl_FragCoord.x + c, height - gl_FragCoord.y + r);
-            float w_s = distance(a, b) < kernel ? 1.0 : 1.0;
+            float w_s = distance(a, b) < kernel ? 1.0 : 0.0;
             float g1 = gradients[big_kernel * big_kernel / 2 - 1];
             float g2 = gradients[((r + kernel) * big_kernel) + c + kernel];
             float w_m = (1 + tanh(g2 - g1)) / 2;
