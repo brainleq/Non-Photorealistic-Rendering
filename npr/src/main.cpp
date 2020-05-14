@@ -124,7 +124,7 @@ int main(void)
     /* Load image and set width and height */
     int width, height, channels;
     unsigned char* image =
-        SOIL_load_image("images/lion.jpg", &width, &height, &channels, SOIL_LOAD_RGB);
+        SOIL_load_image("images/starry.jpg", &width, &height, &channels, SOIL_LOAD_RGB);
     std::cout << "width: " << width << ", height: " << height << std::endl;
 
     /* Create a windowed mode window and its OpenGL context */
@@ -260,6 +260,7 @@ int main(void)
 
         //glDrawArrays(GL_TRIANGLES, 0, 3);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
 
