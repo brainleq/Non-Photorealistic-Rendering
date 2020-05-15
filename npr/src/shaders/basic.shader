@@ -101,25 +101,39 @@ void main()
     g = smoothstep(.7, 1.0, g);
     vec3 edgeColor = vec3(0, 0, 0);
 
-    if (type == 0) {
-        float m = max(max(t_new.x, t_new.y), t_new.z);
-        if (m == 0.0)
-            outColor = vec4(diffuse, 1.0);
-        else {
-            vec3 total = vec3(0.0, 0.0, 0.0);
-            for (int r = -kernel; r < kernel; ++r) {
-                for (int c = -kernel; c < kernel; ++c) {
-                    vec3 sample = vec3(texelFetch(tex, ivec2(gl_FragCoord.x, height - gl_FragCoord.y) + ivec2(r,
-                        c), 0).rgb);
-                    if(!isnan(sample.x) && !isnan(sample.y) && !isnan(sample.z))
-                    total += sample;
-                }
-            }
-        
-            outColor = normalize(vec4(total, 1.0));
-        }
+    if (type == 1) {
+        // Bilateral Blur
+
+        vec2 ctr = vec2(gl_FragCoord.x / width, ((height - gl_FragCoord.y) / height));
+        vec2 off = vec2((2.0 / width) * 2 / 3, (2.0 / height) * 2 / 3);
+        // Access in direction A
+        vec4 retTex = vec4(ctr.x - off.x, ctr.y + off.y, 1.0, 1.0);
+        vec4 A = texture2D(tex, retTex.xy);
+        // Access in direction C
+        retTex = vec4(ctr.x + off.x, ctr.y + off.y, 1.0, 1.0);
+        vec4 B = texture2D(tex, retTex.xy);
+
+        retTex = vec4(ctr.x + off.x, ctr.y - off.y, 1.0, 1.0);
+        vec4 C = texture2D(tex, retTex.xy);
+        // Access in direction H
+        retTex = vec4(ctr.x + off.x, ctr.y - off.y, 1.0, 1.0);
+        vec4 D = texture2D(tex, retTex.xy);
+        // Output blurred destination image pixels
+        outColor = vec4(0.25 * (A + B + C + D));
     }
-    else if (type == 1) {
+    else if (type == 2) {
+        // Sobel Operator Edge Detection
+
+        outColor = vec4(vec3(orig_g), 1.0);
+    }
+    else if (type == 3) {
+        // Edge Tangent Flow
+
+        float m = max(max(t_new.x, t_new.y), t_new.z);
+        outColor = vec4(vec3(m), 1.0);
+    }
+    else if (type == 4) {
+        // ETF + Bilateral Blur
 
         vec2 ctr = vec2(gl_FragCoord.x / width, ((height - gl_FragCoord.y) / height));
         vec2 off = vec2((2.0 / width) * 2 / 3, (2.0 / height) * 2 / 3);
@@ -141,36 +155,30 @@ void main()
 
         // Output blurred destination image pixels
         outColor = vec4(vec3(m), 1.0) * (A + B + C + D);
+    }
+    else if (type == 5) {
+        // ETF Water Color
 
-    }
-    else if (type == 2) {
-        //outColor = texture(tex, Texcoord) * vec4(Color, 1.0);
-        outColor = vec4(vec3(orig_g), 1.0);
-    }
-    else if (type == 3) {
-        vec2 ctr = vec2(gl_FragCoord.x / width, ((height - gl_FragCoord.y) / height));
-        vec2 off = vec2((2.0 / width) * 2 / 3, (2.0 / height) * 2 / 3);
-        // Access in direction A
-        vec4 retTex = vec4(ctr.x - off.x, ctr.y + off.y, 1.0, 1.0);
-        vec4 A = texture2D(tex, retTex.xy);
-        // Access in direction C
-        retTex = vec4(ctr.x + off.x, ctr.y + off.y, 1.0, 1.0);
-        vec4 B = texture2D(tex, retTex.xy);
-
-        retTex = vec4(ctr.x + off.x, ctr.y - off.y, 1.0, 1.0);
-        vec4 C = texture2D(tex, retTex.xy);
-        // Access in direction H
-        retTex = vec4(ctr.x + off.x, ctr.y - off.y, 1.0, 1.0);
-        vec4 D = texture2D(tex, retTex.xy);
-        // Output blurred destination image pixels
-        outColor = vec4(0.25 * (A + B + C + D));
-    }
-    else if (type == 4) {
         float m = max(max(t_new.x, t_new.y), t_new.z);
-        outColor = vec4(vec3(m), 1.0);
+        if (m == 0.0)
+            outColor = vec4(diffuse, 1.0);
+        else {
+            vec3 total = vec3(0.0, 0.0, 0.0);
+            for (int r = -kernel; r < kernel; ++r) {
+                for (int c = -kernel; c < kernel; ++c) {
+                    vec3 sample = vec3(texelFetch(tex, ivec2(gl_FragCoord.x, height - gl_FragCoord.y) + ivec2(r,
+                        c), 0).rgb);
+                    if (!isnan(sample.x) && !isnan(sample.y) && !isnan(sample.z))
+                        total += sample;
+                }
+            }
+
+            outColor = normalize(vec4(total, 1.0));
+        }
     }
-    // default
     else {
+        // Original Image
+
         outColor = vec4(diffuse, 1.0);
     }
 };

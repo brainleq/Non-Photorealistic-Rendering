@@ -87,11 +87,7 @@ static unsigned int create_shader(const std::string& vertex_shader, const std::s
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-    if (key == GLFW_KEY_0 && action == GLFW_PRESS) {
-        old_key = current_key;
-        current_key = 0;
-    }
-    else if (key == GLFW_KEY_1 && action == GLFW_PRESS) {
+    if (key == GLFW_KEY_1 && action == GLFW_PRESS) {
         old_key = current_key;
         current_key = 1;
     }
@@ -110,6 +106,10 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
     else if (key == GLFW_KEY_5 && action == GLFW_PRESS) {
         old_key = current_key;
         current_key = 5;
+    }
+    else if (key == GLFW_KEY_6 && action == GLFW_PRESS) {
+        old_key = current_key;
+        current_key = 6;
     }
 }
 
