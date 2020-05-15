@@ -42,11 +42,12 @@ void main()
     );
     //vec3 diffuse = vec3(texture(tex, Texcoord.xy));
     vec3 diffuse = texelFetch(tex, ivec2(gl_FragCoord.x, height - gl_FragCoord.y), 0).xyz;
-    const int big_kernel = 10;
+    const int big_kernel = 4;
     const int kernel = big_kernel / 2;
     vec3 flow_field[big_kernel * big_kernel];
     float gradients[big_kernel * big_kernel];
     int i = 0;
+    vec3 orig_g;
     for (int r = -kernel; r < kernel; ++r) {
         for (int c = -kernel; c < kernel; ++c) {
             mat3 I;
@@ -60,6 +61,8 @@ void main()
             float gx = dot(sx[0], I[0]) + dot(sx[1], I[1]) + dot(sx[2], I[2]);
             float gy = dot(sy[0], I[0]) + dot(sy[1], I[1]) + dot(sy[2], I[2]);
             float g = sqrt(pow(gx, 2.0) + pow(gy, 2.0));
+            if (r == 0 && c == 0)
+                orig_g = vec3(g);
             vec3 flow = normalize(vec3(gy, gx, 0.0001));
 
             // rotate flow
@@ -100,7 +103,21 @@ void main()
 
     if (type == 0) {
         float m = max(max(t_new.x, t_new.y), t_new.z);
-        outColor = vec4(vec3(m), 1.0);
+        if (m == 0.0)
+            outColor = vec4(diffuse, 1.0);
+        else {
+            vec3 total = vec3(0.0, 0.0, 0.0);
+            for (int r = -kernel; r < kernel; ++r) {
+                for (int c = -kernel; c < kernel; ++c) {
+                    vec3 sample = vec3(texelFetch(tex, ivec2(gl_FragCoord.x, height - gl_FragCoord.y) + ivec2(r,
+                        c), 0).rgb);
+                    if(!isnan(sample.x) && !isnan(sample.y) && !isnan(sample.z))
+                    total += sample;
+                }
+            }
+        
+            outColor = normalize(vec4(total, 1.0));
+        }
     }
     else if (type == 1) {
 
@@ -127,7 +144,8 @@ void main()
 
     }
     else if (type == 2) {
-        outColor = texture(tex, Texcoord) * vec4(Color, 1.0);
+        //outColor = texture(tex, Texcoord) * vec4(Color, 1.0);
+        outColor = vec4(vec3(orig_g), 1.0);
     }
     else if (type == 3) {
         vec2 ctr = vec2(gl_FragCoord.x / width, ((height - gl_FragCoord.y) / height));
@@ -146,6 +164,10 @@ void main()
         vec4 D = texture2D(tex, retTex.xy);
         // Output blurred destination image pixels
         outColor = vec4(0.25 * (A + B + C + D));
+    }
+    else if (type == 4) {
+        float m = max(max(t_new.x, t_new.y), t_new.z);
+        outColor = vec4(vec3(m), 1.0);
     }
     // default
     else {
