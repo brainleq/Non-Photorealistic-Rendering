@@ -7,8 +7,6 @@
 #include <fstream>
 #include <vector>
 
-#include "glm/glm.hpp"
-#include "glm/gtx/string_cast.hpp"
 #include "SOIL.h"
 
 int current_key = 0;
@@ -144,7 +142,7 @@ int main(void)
     if (!glfwInit())
         return -1;
 
-    /* Load image and set width and height */
+    /* ====================================  LOAD IMAGE HERE  ==================================== */
     int width, height, channels;
     unsigned char* image =
         SOIL_load_image("images/tiger.jpg", &width, &height, &channels, SOIL_LOAD_RGB);

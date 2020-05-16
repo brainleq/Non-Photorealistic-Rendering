@@ -1,6 +1,6 @@
 ﻿  main.cpp
-D:\Brian\Documents\workspace\cg\final\npr\npr\src\main.cpp(223,22): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
-D:\Brian\Documents\workspace\cg\final\npr\npr\src\main.cpp(226,23): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
-D:\Brian\Documents\workspace\cg\final\npr\npr\src\main.cpp(229,23): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
-D:\Brian\Documents\workspace\cg\final\npr\npr\src\main.cpp(259,31): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
+D:\Brian\Documents\workspace\cg\final\npr\npr\src\main.cpp(221,22): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
+D:\Brian\Documents\workspace\cg\final\npr\npr\src\main.cpp(224,23): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
+D:\Brian\Documents\workspace\cg\final\npr\npr\src\main.cpp(227,23): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
+D:\Brian\Documents\workspace\cg\final\npr\npr\src\main.cpp(257,31): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
   npr.vcxproj -> D:\Brian\Documents\workspace\cg\final\npr\Debug\npr.exe
