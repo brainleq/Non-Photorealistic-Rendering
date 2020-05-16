@@ -2,7 +2,7 @@
 
 This project generates acrylic styled paintings from photographs. It accomplishes this by calculating gradient vectors using the Sobel operator which the edge tangent flow fields can then be constructed from. These filters are produced in a shader using GLSL.
 
-## Samples
+## Demonstration
 
 **[Italy screenshots](https://github.com/brainleq/Non-Photorealistic-Rendering/tree/master/npr/images/italy_output)**
 ![](sample_italy.gif)
