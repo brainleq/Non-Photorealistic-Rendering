@@ -131,7 +131,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
             }
         }
         
-        int err = SOIL_save_image("images/screenshot.bmp", SOIL_SAVE_TYPE_BMP, global_width, 
+        int err = SOIL_save_image("images/out.bmp", SOIL_SAVE_TYPE_BMP, global_width, 
             global_height, 3, &flip_buf[0]);
     }
 }
@@ -147,7 +147,7 @@ int main(void)
     /* Load image and set width and height */
     int width, height, channels;
     unsigned char* image =
-        SOIL_load_image("images/italy.jpg", &width, &height, &channels, SOIL_LOAD_RGB);
+        SOIL_load_image("images/tiger.jpg", &width, &height, &channels, SOIL_LOAD_RGB);
     std::cout << "width: " << width << ", height: " << height << std::endl;
 
     global_width = width;
