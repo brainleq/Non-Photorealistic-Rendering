@@ -118,7 +118,21 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
         std::vector< unsigned char > buf(global_width * global_height * 3);
         glPixelStorei(GL_PACK_ALIGNMENT, 1);
         glReadPixels(0, 0, global_width, global_height, GL_RGB, GL_UNSIGNED_BYTE, &buf[0]);
-        int err = SOIL_save_image("images/screenshot.bmp", SOIL_SAVE_TYPE_BMP, global_width, global_height, 3, &buf[0]);
+        std::vector< unsigned char > flip_buf(global_width * global_height * 3);
+
+        for (int i = 0; i < global_width; ++i) {
+            for (int j = 0; j < global_height; ++j) {
+                for (int k = 0; k < 3; ++k) {
+                    flip_buf[(i + j * global_width) * 3 + k] 
+                        = buf[(i + (global_height - 1 - j) * global_width) * 3 + k];
+
+
+                }
+            }
+        }
+        
+        int err = SOIL_save_image("images/screenshot.bmp", SOIL_SAVE_TYPE_BMP, global_width, 
+            global_height, 3, &flip_buf[0]);
     }
 }
 
