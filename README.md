@@ -24,6 +24,7 @@ This project generates acrylic styled paintings from photographs. It accomplishe
 * [GLEW](http://glew.sourceforge.net/) - Modern OpenGL
 * [GLFW](https://www.glfw.org/) - OpenGL window
 * [SOIL](https://www.lonesock.net/soil.html) - Image loading and saving
+* These tools are already installed in [Dependencies](https://github.com/brainleq/Non-Photorealistic-Rendering/tree/master/Dependencies) and static links should already be set up for npr.sln
 
 ## Authors
 
