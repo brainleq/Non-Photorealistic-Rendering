@@ -17,6 +17,7 @@ This project generates acrylic styled paintings from photographs.
 
 * Load in a JPG.
 * Pressing numbers 1-5 will render each step of the painting generation (as shown in the sample gifs above).
+* Pressing key J will screenshot window and save the image as a BMP file.
 
 ## Built With
 
