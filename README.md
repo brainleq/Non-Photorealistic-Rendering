@@ -31,4 +31,5 @@ This project generates acrylic styled paintings from photographs.
 * [Coherent Line Drawing](http://umsl.edu/mathcs/about/People/Faculty/HenryKang/coon.pdf)
 * [Flow-Based Image Abstraction](http://www.cs.umsl.edu/~kang/Papers/kang_tvcg09.pdf)
 * [REAL-TIME NON-PHOTOREALISTIC RENDERING](https://pille.iwr.uni-heidelberg.de/~npr01/)
+* [Artistic Stylization of Images and Video](http://kahlan.eps.surrey.ac.uk/EG2011/eg2011-npr3.pdf)
 
