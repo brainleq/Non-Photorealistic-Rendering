@@ -4,8 +4,11 @@ This project generates acrylic styled paintings from photographs.
 
 ## Samples
 
+**[Italy](https://github.com/brainleq/Non-Photorealistic-Rendering/tree/master/npr/images/italy_output)**
 ![](sample_italy.gif)
+**[Holi](https://github.com/brainleq/Non-Photorealistic-Rendering/tree/master/npr/images/holi_output)**
 ![](sample_holi.gif)
+**[Mumbai](https://github.com/brainleq/Non-Photorealistic-Rendering/tree/master/npr/images/mumbai_output)**
 ![](sample_mumbai.gif)
 
 * **More examples can be found [here](https://github.com/brainleq/Non-Photorealistic-Rendering/tree/master/npr/images)**
