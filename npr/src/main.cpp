@@ -5,6 +5,7 @@
 #include <sstream>
 #include <string>
 #include <fstream>
+#include <vector>
 
 #include "glm/glm.hpp"
 #include "glm/gtx/string_cast.hpp"
@@ -12,6 +13,8 @@
 
 int current_key = 0;
 int old_key = 0;
+int global_width = 0;
+int global_height = 0;
 
 struct ShaderSource {
     std::string VertexSource;
@@ -111,6 +114,12 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
         old_key = current_key;
         current_key = 6;
     }
+    else if (key == GLFW_KEY_J && action == GLFW_PRESS) {
+        std::vector< unsigned char > buf(global_width * global_height * 3);
+        glPixelStorei(GL_PACK_ALIGNMENT, 1);
+        glReadPixels(0, 0, global_width, global_height, GL_RGB, GL_UNSIGNED_BYTE, &buf[0]);
+        int err = SOIL_save_image("images/screenshot.bmp", SOIL_SAVE_TYPE_BMP, global_width, global_height, 3, &buf[0]);
+    }
 }
 
 int main(void)
@@ -124,8 +133,11 @@ int main(void)
     /* Load image and set width and height */
     int width, height, channels;
     unsigned char* image =
-        SOIL_load_image("images/pisa2.jpg", &width, &height, &channels, SOIL_LOAD_RGB);
+        SOIL_load_image("images/italy.jpg", &width, &height, &channels, SOIL_LOAD_RGB);
     std::cout << "width: " << width << ", height: " << height << std::endl;
+
+    global_width = width;
+    global_height = height;
 
     /* Create a windowed mode window and its OpenGL context */
     window = glfwCreateWindow(width, height, "Original Image", NULL, NULL);
