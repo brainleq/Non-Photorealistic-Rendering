@@ -26,3 +26,9 @@ This project generates acrylic styled paintings from photographs.
 * **Brian LeQuang** - [brainleq](https://github.com/brainleq)
 * **Tarun Prince** - [Tarun-Prince99](https://github.com/Tarun-Prince99)
 
+## References
+
+* [Coherent Line Drawing](http://umsl.edu/mathcs/about/People/Faculty/HenryKang/coon.pdf)
+* [Flow-Based Image Abstraction](http://www.cs.umsl.edu/~kang/Papers/kang_tvcg09.pdf)
+* [REAL-TIME NON-PHOTOREALISTIC RENDERING](https://pille.iwr.uni-heidelberg.de/~npr01/)
+
