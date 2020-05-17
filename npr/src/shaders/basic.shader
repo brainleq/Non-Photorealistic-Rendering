@@ -123,23 +123,23 @@ void main()
     reverse_sobel.z = 1 - orig_g.z;
 
     if (type == 1) {
-        // Bilateral Blur
+        // Blur Filter
 
         outColor = vec4(0.25 * (A + B + C + D));
     }
     else if (type == 2) {
-        // Sobel Operator Edge Detection
+        // Sobel Edge Filter
         orig_g = smoothstep(.1, 1.0, orig_g);
         outColor = vec4(vec3(orig_g), 1.0);
     }
     else if (type == 3) {
-        // Edge Tangent Flow
+        // Edge Tangent Flow Filter
         
         float m = max(max(t_new.x, t_new.y), t_new.z);
         outColor = vec4(vec3(m), 1.0);
     }
     else if (type == 4) {
-        // Sobel Edges + ETF + Bilateral Blur
+        // Blur + Sobel + ETF
 
         if (isnan(t_new.x) || isnan(t_new.y) || isnan(t_new.z)) {
             outColor = vec4(vec3(reverse_sobel), 1.0) * (A + B + C + D);
@@ -150,7 +150,7 @@ void main()
         }
     }
     else if (type == 5) {
-        // Acrylic Painting Style
+        // Acrylic Painting
 
         vec3 total = vec3(0.0, 0.0, 0.0);
         for (int r = -kernel; r < kernel; ++r) {

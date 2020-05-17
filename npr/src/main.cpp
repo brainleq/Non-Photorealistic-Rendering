@@ -142,10 +142,10 @@ int main(void)
     if (!glfwInit())
         return -1;
 
-    /* ====================================  LOAD IMAGE HERE  ==================================== */
+    /* ====================================  SELECT IMAGE HERE  ==================================== */
     int width, height, channels;
     unsigned char* image =
-        SOIL_load_image("images/tiger.jpg", &width, &height, &channels, SOIL_LOAD_RGB);
+        SOIL_load_image("images/rome.jpg", &width, &height, &channels, SOIL_LOAD_RGB);
     std::cout << "width: " << width << ", height: " << height << std::endl;
 
     global_width = width;
@@ -257,7 +257,7 @@ int main(void)
             glUniform1f(loc2, current_key);
             switch (current_key) {
                 case 1 :
-                    glfwSetWindowTitle(window, "Bilateral Blur Filter");
+                    glfwSetWindowTitle(window, "Blur Filter");
                     break;
                 case 2:
                     glfwSetWindowTitle(window, "Sobel Edge Filter");
@@ -266,10 +266,10 @@ int main(void)
                     glfwSetWindowTitle(window, "Edge Tangent Flow Filter");
                     break;
                 case 4:
-                    glfwSetWindowTitle(window, "BB Filter + SE Filter + ETF Filter");
+                    glfwSetWindowTitle(window, "Blur + Sobel + ETF");
                     break;
                 case 5:
-                    glfwSetWindowTitle(window, "Acrylic Painting Generation");
+                    glfwSetWindowTitle(window, "Acrylic Painting");
                     break;
                 default:
                     glfwSetWindowTitle(window, "Original Image");
