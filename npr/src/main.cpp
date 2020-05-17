@@ -145,7 +145,7 @@ int main(void)
     /* ====================================  SELECT IMAGE HERE  ==================================== */
     int width, height, channels;
     unsigned char* image =
-        SOIL_load_image("images/rome.jpg", &width, &height, &channels, SOIL_LOAD_RGB);
+        SOIL_load_image("images/speedway.jpg", &width, &height, &channels, SOIL_LOAD_RGB);
     std::cout << "width: " << width << ", height: " << height << std::endl;
 
     global_width = width;
