@@ -1,6 +1,6 @@
 # Non-Photorealistic Rendering
 
-This project generates acrylic styled paintings from photographs. It accomplishes this by calculating gradient vectors obtained from applying the Sobel operator on an input image in order to produce a resulting image that contains more defined edges. From this, we create a smooth direction field, or edge tangent flow, from our sobel images. For this project, we used the values of defined edge lines as well as the average neighborhood (10x10) color for each pixel in order to create an acrylic stylization of a given input image. All of the above mentioned features are implemented via shaders using GLSL.
+This project generates acrylic styled paintings from photographs. It accomplishes this by applying the Sobel operator on an input image in order to produce gradient vectors for edge detection. From this, we create a smooth direction field, or edge tangent flow. With these filters, we perform a convolution over the pixels yielding an acrylic styled painting. All of this is implemented in a shader using GLSL.
 
 ## Demonstration
 
